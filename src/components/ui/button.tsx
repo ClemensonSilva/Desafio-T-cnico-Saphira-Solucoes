@@ -17,7 +17,7 @@ export function Button({
 }: ButtonProps) {
   
   const variants = {
-    default: "bg-blue-600 text-white hover:bg-black-700 shadow-sm",
+    default: "bg-slate-950 text-white hover:bg-slate-700 shadow-sm",
     destructive: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
     outline: "border border-gray-200 bg-white hover:bg-gray-100 text-gray-900",
     secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",

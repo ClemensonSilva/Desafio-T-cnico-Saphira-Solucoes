@@ -5,6 +5,9 @@ import { prisma } from "../lib/prisma";
  async getAllItemsByCart(cartId: number) {
     const items = await prisma.cartItem.findMany({
         where: { cartId: cartId },
+        include: {
+    product: true 
+  }
     });
     return items;
 }

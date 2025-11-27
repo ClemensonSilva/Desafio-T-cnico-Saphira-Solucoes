@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductUI } from "@/types/index";
+import Image from "next/image"; // futura otimizacao
 
 export function ProductCard({ product }: { product: ProductUI }) {
 

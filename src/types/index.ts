@@ -5,6 +5,8 @@ import type { Prisma } from "@prisma/client";
  * Relações são opcionais (podem ser incluídas quando você fizer include/select no Prisma).
  */
 
+
+
 export interface UserUI {
     id: number;
     email: string;
@@ -16,10 +18,10 @@ export interface UserUI {
 export interface ProductUI {
     id: number;
     name: string;
-    price: Prisma.Decimal | string;
+    price: Prisma.Decimal | number;
     description: string;
     categoryId: number;
-    category?: CategoryUI;
+    category: CategoryUI;
     imageUrl: string;
     cartItems?: CartItemUI[];
 }
@@ -44,6 +46,6 @@ export interface CartItemUI {
     quantity: number;
     productId: number;
     cartId: number;
-    product?: ProductUI;
-    cart?: CartUI;
+    product: ProductUI;
+    cart: CartUI;
 }

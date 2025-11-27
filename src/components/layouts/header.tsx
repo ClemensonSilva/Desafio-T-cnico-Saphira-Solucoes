@@ -10,16 +10,14 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         
-        {/* 1. Logo (Link para Home) */}
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold text-gray-900">
+        <Link href="/products" className="flex items-center gap-2 text-xl font-bold text-gray-900">
           <Store className="h-6 w-6" />
           <span>TechStore</span>
         </Link>
 
-        {/* 2. Navegação e Ações */}
         <div className="flex items-center gap-4">
           <Link 
-            href="/" 
+            href="/products" 
             className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors hidden sm:block"
           >
             Products
