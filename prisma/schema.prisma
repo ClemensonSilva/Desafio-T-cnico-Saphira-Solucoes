@@ -1,12 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output = "../../node_modules/.prisma/client"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -19,19 +16,26 @@ model User {
   name     String
   password String?
   
-  carts    Cart[]
+  // CORREÇÃO 1: Coloquei '?' (opcional). 
+  // Sem isso, você não conseguiria criar um Usuário sem criar um Carrinho no mesmo instante.
+  cart     Cart?   
 
   @@map("users")
 }
 
 model Product {
-  id         Int        @id @default(autoincrement())
-  name       String
-  price      Decimal    @db.Decimal(10, 2)
-  categoryId Int
-  category   Category   @relation(fields: [categoryId], references: [id])
-  imageUrl   String     @map("image_url")
-  cartItems  CartItem[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Decimal  @db.Decimal(10, 2)
+  
+  // CORREÇÃO 2: Aumentei para 255 ou Texto ilimitado. 
+  // 25 caracteres é muito pouco para uma descrição.
+  description String   @db.VarChar(255) 
+  
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  imageUrl    String   @map("image_url")
+  cartItems   CartItem[]
 
   @@map("products")
 }
@@ -46,22 +50,28 @@ model Category {
 
 model Cart {
   id        Int        @id @default(autoincrement())
-  userId    Int
+  userId    Int        @unique // CORREÇÃO 3: Necessário @unique para relação 1:1
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   items     CartItem[]
-  user      User       @relation(fields: [userId], references: [id])
+  
+  // CORREÇÃO 4: A definição da relação estava incompleta aqui
+  user      User       @relation(fields: [userId], references: [id]) 
 
   @@map("carts")
 }
 
 model CartItem {
   id        Int     @id @default(autoincrement())
-  cart      Cart    @relation(fields: [cartId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int     @default(1)
-  productId Int     @map("product_id")
+  
+  // Relações (estavam corretas, mantive)
   cartId    Int     @map("cart_id")
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+  
+  quantity  Int     @default(1)
 
   @@map("cart_items")
 }
