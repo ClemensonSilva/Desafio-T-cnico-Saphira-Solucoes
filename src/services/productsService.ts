@@ -38,7 +38,8 @@ async deleteProductById(productId: number) {
  async  getProductsByCategory(categoryId: number) {
     const products = await prisma.product.findMany({
         where: { categoryId: categoryId },
-        orderBy: { price: 'asc' }
+        orderBy: { price: 'asc' },
+        include: { category: true },
     });
     return products;
 }

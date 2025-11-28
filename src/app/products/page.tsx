@@ -5,8 +5,10 @@ import { SearchBar } from "@/components/products/search-bar";
 import { ProductUI } from "@/types";
 import Image from "next/image"; 
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function getCategories() {
-  const data = await fetch('http://localhost:3000/api/categories', {
+  const data = await fetch(`${API_URL}/api/categories`, {
       cache: 'no-store' 
   });
   
@@ -16,8 +18,8 @@ async function getCategories() {
 
 async function getProducts(categoryName?: string) {
   const url = categoryName 
-    ? `http://localhost:3000/api/products?category=${encodeURIComponent(categoryName)}`
-    : 'http://localhost:3000/api/products';
+    ? `${API_URL}/api/products?category=${encodeURIComponent(categoryName)}`
+    : `${API_URL}/api/products`;
   
   const data = await fetch(url, {
     cache: 'no-store' 

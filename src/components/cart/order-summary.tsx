@@ -7,15 +7,22 @@ import Link from 'next/link';
 interface OrderSummaryProps {
   subtotal: number;
   taxRate?: number; // Opcional, default 0.1 (10%)
-  onCheckout: () => void;
-  onContinueShopping: () => void;
+ 
 }
+async function onCheckout() {
+  // Lógica de checkout aqui
+  console.log("Checkout click");
+}
+
+async function onContinueShopping() {
+  // Lógica para continuar comprando aqui
+  console.log("Continue click");
+}
+
 
 export function OrderSummary({ 
   subtotal, 
   taxRate = 0.1, 
-  onCheckout, 
-  onContinueShopping 
 }: OrderSummaryProps) {
   
   const taxAmount = subtotal * taxRate;

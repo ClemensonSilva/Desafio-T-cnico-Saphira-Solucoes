@@ -28,6 +28,12 @@ import { prisma } from "../lib/prisma";
 }
 
  async editItemQuantity(cartId: number, productId: number, quantity: number) {
+    if (quantity === 0) {
+        return await prisma.cartItem.deleteMany({
+            where: { cartId, productId }
+        });
+    }
+
     const updatedItem = await prisma.cartItem.updateMany({
         where: { cartId: cartId, productId: productId },
         data: { quantity: quantity },
