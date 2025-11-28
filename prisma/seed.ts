@@ -45,33 +45,142 @@ async function main() {
   console.log('Criando 5 produtos por categoria...');
 
   const productsData = [
-    // Eletrônicos
-    { name: 'Smartphone Pro Max', price: 6999.00, description: 'O melhor smartphone do mercado', categoryId: eletronicos.id, imageUrl: 'https://img.example.com/phone.jpg' },
-    { name: 'Smart TV 55"', price: 3500.50, description: 'Smart TV com resolução 4K', categoryId: eletronicos.id, imageUrl: 'https://img.example.com/tv.jpg' },
-    { name: 'Fone Bluetooth', price: 450.00, description: 'Fone de ouvido sem fio com cancelamento de ruído', categoryId: eletronicos.id, imageUrl: 'https://img.example.com/fones.jpg' },
-    { name: 'Notebook Ultrafino', price: 4999.99, description: 'Notebook leve e potente para profissionais', categoryId: eletronicos.id, imageUrl: 'https://img.example.com/notebook.jpg' },
-    { name: 'Mouse Gamer RGB', price: 199.90, description: 'Mouse com iluminação RGB e alta precisão', categoryId: eletronicos.id, imageUrl: 'https://img.example.com/mouse.jpg' },
-    // Livros
-    { name: 'Clean Code: Habilidades de um Desenvolvedor Ágil', price: 95.00, description: 'Livro sobre boas práticas de programação', categoryId: livros.id, imageUrl: 'https://img.example.com/cleancode.jpg' },
-    { name: 'O Guia do Mochileiro das Galáxias', price: 45.90, description: 'Livro de ficção científica clássico', categoryId: livros.id, imageUrl: 'https://img.example.com/mochileiro.jpg' },
-    { name: 'Dom Casmurro', price: 30.00, description: 'Romance clássico brasileiro', categoryId: livros.id, imageUrl: 'https://img.example.com/domcasmurro.jpg' },
-    { name: 'A Arte da Guerra', price: 25.50, description: 'Livro sobre estratégias militares e de vida', categoryId: livros.id, imageUrl: 'https://img.example.com/arteguerra.jpg' },
-    { name: 'Padrões de Projeto', price: 120.00, description: 'Livro sobre soluções reutilizáveis para problemas comuns de design de software', categoryId: livros.id, imageUrl: 'https://img.example.com/patterns.jpg' },
+    // --- Eletrônicos ---
+    { 
+        name: 'Smartphone Pro Max', 
+        price: 6999.00, 
+        description: 'O melhor smartphone do mercado', 
+        categoryId: eletronicos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Smart TV 55"', 
+        price: 3500.50, 
+        description: 'Smart TV com resolução 4K', 
+        categoryId: eletronicos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Fone Bluetooth', 
+        price: 450.00, 
+        description: 'Fone de ouvido sem fio com cancelamento de ruído', 
+        categoryId: eletronicos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Notebook Ultrafino', 
+        price: 4999.99, 
+        description: 'Notebook leve e potente para profissionais', 
+        categoryId: eletronicos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Mouse Gamer RGB', 
+        price: 199.90, 
+        description: 'Mouse com iluminação RGB e alta precisão', 
+        categoryId: eletronicos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=800&auto=format&fit=crop' 
+    },
 
-    // Vestuário
-    { name: 'Camiseta Algodão Pima', price: 89.90, description: 'Camiseta feita com algodão Pima de alta qualidade', categoryId: vestuario.id, imageUrl: 'https://img.example.com/camiseta.jpg' },
-    { name: 'Calça Jeans Slim Fit', price: 150.00, description: 'Calça jeans com corte slim fit', categoryId: vestuario.id, imageUrl: 'https://img.example.com/jeans.jpg' },
-    { name: 'Tênis Esportivo Running', price: 299.99, description: 'Tênis confortável para corrida e atividades físicas', categoryId: vestuario.id, imageUrl: 'https://img.example.com/tenis.jpg' },
-    { name: 'Jaqueta Corta Vento', price: 199.90, description: 'Jaqueta leve e resistente ao vento', categoryId: vestuario.id, imageUrl: 'https://img.example.com/jaqueta.jpg' },
-    { name: 'Meias Esportivas (Pack 3)', price: 35.00, description: 'Pacote com 3 pares de meias esportivas', categoryId: vestuario.id, imageUrl: 'https://img.example.com/meias.jpg' },
+    // --- Livros (Imagens Conceituais/Temáticas) ---
+   
+    { 
+        name: 'O Guia do Mochileiro das Galáxias', 
+        price: 45.90, 
+        description: 'Livro de ficção científica clássico', 
+        categoryId: livros.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Dom Casmurro', 
+        price: 30.00, 
+        description: 'Romance clássico brasileiro', 
+        categoryId: livros.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'A Arte da Guerra', 
+        price: 25.50, 
+        description: 'Livro sobre estratégias militares e de vida', 
+        categoryId: livros.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1555596873-4d173c7cb7af?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Padrões de Projeto', 
+        price: 120.00, 
+        description: 'Livro sobre soluções reutilizáveis para problemas comuns de design de software', 
+        categoryId: livros.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=800&auto=format&fit=crop' 
+    },
 
-    // Alimentos
-    { name: 'Café Gourmet Moído 500g', price: 45.00, description: 'Café gourmet moído de alta qualidade', categoryId: alimentos.id, imageUrl: 'https://img.example.com/cafe.jpg' },
-    { name: 'Barra de Chocolate Amargo 70%', price: 15.00, description: 'Barra de chocolate amargo com 70% cacau', categoryId: alimentos.id, imageUrl: 'https://img.example.com/chocolate.jpg' },
-    { name: 'Azeite Extra Virgem 500ml', price: 39.90, description: 'Azeite extra virgem de alta qualidade', categoryId: alimentos.id, imageUrl: 'https://img.example.com/azeite.jpg' },
-    { name: 'Arroz Integral 1kg', price: 12.00, description: 'Arroz integral de alta qualidade', categoryId: alimentos.id, imageUrl: 'https://img.example.com/arroz.jpg' },
-    { name: 'Mel Orgânico 300g', price: 28.50, description: 'Mel orgânico puro e natural', categoryId: alimentos.id, imageUrl: 'https://img.example.com/mel.jpg' },
-  ];
+    // --- Vestuário ---
+    { 
+        name: 'Camiseta Algodão Pima', 
+        price: 89.90, 
+        description: 'Camiseta feita com algodão Pima de alta qualidade', 
+        categoryId: vestuario.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Calça Jeans Slim Fit', 
+        price: 150.00, 
+        description: 'Calça jeans com corte slim fit', 
+        categoryId: vestuario.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Tênis Esportivo Running', 
+        price: 299.99, 
+        description: 'Tênis confortável para corrida e atividades físicas', 
+        categoryId: vestuario.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop' 
+    },
+    
+    { 
+        name: 'Meias Esportivas (Pack 3)', 
+        price: 35.00, 
+        description: 'Pacote com 3 pares de meias esportivas', 
+        categoryId: vestuario.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?q=80&w=800&auto=format&fit=crop' 
+    },
+
+    // --- Alimentos ---
+    { 
+        name: 'Café Gourmet Moído 500g', 
+        price: 45.00, 
+        description: 'Café gourmet moído de alta qualidade', 
+        categoryId: alimentos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Barra de Chocolate Amargo 70%', 
+        price: 15.00, 
+        description: 'Barra de chocolate amargo com 70% cacau', 
+        categoryId: alimentos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Azeite Extra Virgem 500ml', 
+        price: 39.90, 
+        description: 'Azeite extra virgem de alta qualidade', 
+        categoryId: alimentos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcdcc3a?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Arroz Integral 1kg', 
+        price: 12.00, 
+        description: 'Arroz integral de alta qualidade', 
+        categoryId: alimentos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=800&auto=format&fit=crop' 
+    },
+    { 
+        name: 'Mel Orgânico 300g', 
+        price: 28.50, 
+        description: 'Mel orgânico puro e natural', 
+        categoryId: alimentos.id, 
+        imageUrl: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=800&auto=format&fit=crop' 
+    },
+];
 
   await prisma.product.createMany({
     

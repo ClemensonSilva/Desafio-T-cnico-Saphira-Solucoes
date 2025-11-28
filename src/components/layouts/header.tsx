@@ -12,7 +12,7 @@ export function Header() {
         
         <Link href="/products" className="flex items-center gap-2 text-xl font-bold text-gray-900">
           <Store className="h-6 w-6" />
-          <span>TechStore</span>
+          <span>Tem de Tudo</span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -20,7 +20,7 @@ export function Header() {
             href="/products" 
             className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors hidden sm:block"
           >
-            Products
+            Produtos
           </Link>
 
           <Link href="/cart">
@@ -35,7 +35,7 @@ export function Header() {
                   {cartItemCount}
                 </Badge>
               )}
-              <span className="sr-only">Open cart</span>
+              <span className="sr-only">Abrir carrinho</span>
             </Button>
           </Link>
         </div>
