@@ -11,7 +11,7 @@ async function main() {
   const usersData = [
     { name: 'Alice Silva', email: 'alice@example.com', password: 'hashedpassword1', cep: '59625-970' },
     { name: 'Bruno Costa', email: 'bruno@example.com', password: 'hashedpassword2', cep: '01001-000' },
-    { name: 'Carla Dias', email: 'carla@example.com', password: 'hashedpassword3' },
+    { name: 'Carla Dias', email: 'carla@example.com', password: 'hashedpassword3', cep: '20040-020' },
   ];
 
   await prisma.user.createMany({

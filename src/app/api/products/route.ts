@@ -1,20 +1,30 @@
+import { categoryService } from '@/services/categoryServices';
 import { productsService } from '@/services/productsService';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get('categoryId');
-    let products ; 
-
-    if (categoryId) {
-        products = await productsService.getProductsByCategory(Number(categoryId));
-    }
-
-    if(!categoryId){ {
+    const categoryName = searchParams.get('category'); 
+   let products ; 
+    
+   if(!categoryName){ 
         products = await productsService.getAllProducts();
     }
+   
+    if (categoryName) {
+        const category = await categoryService.getCategoryByName(categoryName);
+        if (!category || category.length === 0) {
+            return new Response(JSON.stringify({ error: 'Categoria não encontrada' }), {
+                status: 404,
+                headers: { 'Content-Type': 'application/json' },
+            });
+        }
+        products = await productsService.getProductsByCategory(category.id);
+    }
+
+   
 
 
-    if (!products) {
+    if (!products || products.length === 0) {
         return new Response(JSON.stringify({ error: 'Produtos não encontrados' }), {
             status: 404,
             headers: { 'Content-Type': 'application/json' },
@@ -25,5 +35,4 @@ export async function GET(request: Request) {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
     });
-}
 }

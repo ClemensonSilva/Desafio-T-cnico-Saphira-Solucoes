@@ -1,12 +1,32 @@
+import { categoryService } from "@/services/categoryServices";
 import { productsService } from "@/services/productsService";
+import { NextRequest } from "next/server";
+
+export async function GET( request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;    
+    const categoryName = searchParams.get("category");
+
+     if (!categoryName) {
+        return new Response(JSON.stringify({ error: "Parâmetro de categoria ausente" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
+    const category = await categoryService.getCategoryByName(categoryName? categoryName : "");
+
+   if (!category) {
+        return new Response(JSON.stringify({ error: "Categoria não encontrada" }), {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
 
 
-export async function GET( request: Request, { params }: { params: { id: string } }) {
-    const id = params.id;
-    const products = await productsService.getProductById(Number(id));
+    const products = await productsService.getProductsByCategory(category ? category.id : null);
 
-    if (!products) {
-        return new Response(JSON.stringify({ error: "Produto não encontrado" }), {
+    if (!products || products.length === 0) {
+        return new Response(JSON.stringify({ error: "Nenhum produto encontrado para esta categoria" }), {
             status: 404,
             headers: { "Content-Type": "application/json" },
         });

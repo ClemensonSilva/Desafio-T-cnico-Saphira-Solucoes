@@ -1,4 +1,4 @@
-"use client" // Obrigatório para usar Hooks (useSearchParams)
+"use client" 
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,8 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const currentCategory = searchParams.get("category");
-
+  const activeCategory = searchParams.get('category') || 'All Categories';
+  
   const handleSelectCategory = (categoryName: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -29,7 +29,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
   return (
     <div className="flex flex-wrap gap-2 pb-4">
       <Button
-        variant={!currentCategory ? "default" : "outline"}
+        variant={activeCategory === 'All Categories' ? "default" : "outline"}
         onClick={() => handleSelectCategory(null)}
         size="sm"
         className="rounded-full"
@@ -40,7 +40,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
       {categories.map((cat) => (
         <Button
           key={cat.id}
-          variant={currentCategory === cat.name ? "default" : "outline"}
+          variant={activeCategory === cat.name ? "default" : "outline"}
           onClick={() => handleSelectCategory(cat.name)}
           size="sm"
           className="rounded-full"
