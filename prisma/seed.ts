@@ -5,7 +5,18 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Iniciando o seeding...');
+  console.log('Limpando banco de dados antigo...');
+  
+  // A ordem importa! Apague os filhos antes dos pais.
+  await prisma.cartItem.deleteMany(); // Apaga itens do carrinho primeiro
+  await prisma.cart.deleteMany();     // Apaga os carrinhos
+  await prisma.product.deleteMany();  // Apaga produtos
+  await prisma.category.deleteMany(); // Apaga categorias
+  await prisma.user.deleteMany();     // Apaga usuários por último
+
+  console.log('Banco limpo! Iniciando inserção...');
+
+    console.log('Iniciando o seeding...');
 
   // --- 1. Usuários (Users) ---
   console.log('Criando usuários...');
