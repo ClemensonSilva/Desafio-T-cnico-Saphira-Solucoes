@@ -1,10 +1,17 @@
 import { cartService } from "@/services/cartService";
 import { NextResponse } from "next/server";
 
+type RouteProps = {
+  params: Promise<{ id: string }>
+}
 
-// Método está aqui pois o item do carrinho é um recurso do carrinho
-export async function POST( request: Request, { params }: { params: { id: string } }) {
+export async function POST(
+    request: Request, 
+    props: RouteProps // Atualizado para usar o tipo com Promise
+) {
+    const params = await props.params; 
     const id = Number(params.id);
+    
     const body = await request.json();
 
     const cartItem = await cartService.addItemToCart(id, body.productId, body.quantity);
@@ -22,17 +29,14 @@ export async function POST( request: Request, { params }: { params: { id: string
     });
 }
 
-type RouteContext = {
-  params: Promise<{ id: string }>
-}
 
 export async function PUT(
   request: Request,
-  { params }: RouteContext 
+  props: RouteProps
 ) {
   try {
-    const resolvedParams = await params;
-    const cartId = Number(resolvedParams.id);
+    const params = await props.params;
+    const cartId = Number(params.id);
 
     if (isNaN(cartId)) {
         return NextResponse.json({ error: "ID inválido" }, { status: 400 });
@@ -61,7 +65,12 @@ export async function PUT(
   }
 }
 
-export async function DELETE( request: Request, { params }: { params: { id: string } }) {
+
+export async function DELETE(
+    request: Request, 
+    props: RouteProps 
+) {
+    const params = await props.params; 
     const id = Number(params.id);
     
     const deletedItem = await cartService.removeItemFromCart(id);
@@ -78,14 +87,9 @@ export async function DELETE( request: Request, { params }: { params: { id: stri
     });
 }
 
-// puxa todos os itens do carrinho
-type Props = {
-    params: Promise<{ id: string }>
-}
-
 export async function GET(
     request: Request, 
-    props: Props
+    props: RouteProps
 ) {
     try {
         const params = await props.params;
@@ -97,16 +101,20 @@ export async function GET(
                 { status: 400 }
             );
         }
+        
         const cart = await cartService.getCartByUserId(userId);
-    
 
-
-        const items = await cartService.getAllItemsByCart(cart.id);
-        if (!items) {
-            return NextResponse.json(
-                { error: "Carrinho não encontrado" }, 
+        if (!cart) {
+             return NextResponse.json(
+                { error: "Carrinho não encontrado para este usuário" }, 
                 { status: 404 }
             );
+        }
+
+        const items = await cartService.getAllItemsByCart(cart.id);
+        
+        if (!items) {
+            return NextResponse.json([], { status: 200 }); 
         }
 
         return NextResponse.json(items, { status: 200 });
