@@ -47,6 +47,19 @@ async getCartByUserId(userId: number) {
     if (!product || !cart) {
         return null;
     }
+    // se o item já existe, atualiza a quantidade
+    const existingItem = await prisma.cartItem.findFirst({
+        where: {
+            cartId: cart.id,
+            productId: productId,
+        },
+    });
+    
+    if (existingItem) {
+       existingItem.quantity += quantity;
+       this.editItemQuantity(cart.id, productId, existingItem.quantity);
+       return existingItem;
+    }
 
     const cartId = cart.id;
 
