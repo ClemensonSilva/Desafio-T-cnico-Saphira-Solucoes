@@ -11,7 +11,7 @@ export interface UserUI {
     id: number;
     email: string;
     name: string;
-    password: string | null;
+    password: string ;
     cart?: CartUI;
 }
 

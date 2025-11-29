@@ -12,6 +12,29 @@ import { prisma } from "../lib/prisma";
     return items;
 }
 
+async getCartByUserId(userId: number) {
+    let cart = await prisma.cart.findUnique({
+        where: { userId: userId },
+        include: {
+            items: {
+                include: {
+                    product: {
+                    include: { category: true   
+                    }
+                }
+            }
+        }
+    }});
+    // se for primeiro acesso, cria o carrinho
+    if (!cart) {
+        return  await prisma.cart.create({
+            data: { userId: userId },
+            include: { items: true } 
+        });
+    }
+    return cart;
+}
+
  async addItemToCart(cartId: number, productId: number, quantity: number) {
     const product = await prisma.product.findUnique({
         where: { id: productId },

@@ -5,12 +5,21 @@ import { Header } from "@/components/layouts/header";
 import {ContinueBuying} from "@/components/cart/continue-buying";
 import { ProductUI } from "@/types";
 import { CartItemUI } from "@/types";
-import { get } from "http";
+import { getSession, SessionData } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 async function getCartItems(cartId: number) {
-    const data = await fetch(`${API_URL}/api/cart/${cartId}`, {
+   const session: SessionData = await getSession();
+
+   if (!session.isLoggedIn || !session.user) {
+        // Usa o redirect do Next.js (Server-Side redirect)
+        redirect("/login?callbackUrl=/cart"); 
+        return [];
+    }
+
+    const data = await fetch(`${API_URL}/api/cart/${session.user.id}`, {
         cache: 'no-store'
     });
 

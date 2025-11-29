@@ -1,6 +1,7 @@
 import { cartService } from "@/services/cartService";
 import { NextResponse } from "next/server";
 
+
 // Método está aqui pois o item do carrinho é um recurso do carrinho
 export async function POST( request: Request, { params }: { params: { id: string } }) {
     const id = Number(params.id);
@@ -88,17 +89,19 @@ export async function GET(
 ) {
     try {
         const params = await props.params;
-        const id = Number(params.id);
+        const userId = Number(params.id);
 
-        if (isNaN(id)) {
+        if (isNaN(userId)) {
             return NextResponse.json(
                 { error: "ID do carrinho inválido" },
                 { status: 400 }
             );
         }
+        const cart = await cartService.getCartByUserId(userId);
     
-        const items = await cartService.getAllItemsByCart(id);
 
+
+        const items = await cartService.getAllItemsByCart(cart.id);
         if (!items) {
             return NextResponse.json(
                 { error: "Carrinho não encontrado" }, 
