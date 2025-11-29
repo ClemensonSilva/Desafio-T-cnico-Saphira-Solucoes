@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Lock, Mail, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function LoginPage() {
+// 1. O componente com a lógica PESADA e o useSearchParams fica aqui
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -137,5 +138,18 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -12,7 +12,7 @@ export async function GET(request: Request) {
    
     if (categoryName) {
         const category = await categoryService.getCategoryByName(categoryName);
-        if (!category || category.length === 0) {
+        if (!category ) {
             return new Response(JSON.stringify({ error: 'Categoria não encontrada' }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' },

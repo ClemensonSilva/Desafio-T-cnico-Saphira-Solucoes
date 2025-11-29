@@ -31,8 +31,8 @@ class CategoryService {
         if (!name) return null;
         
         try {
-        const category = await prisma.category.findUnique({
-            where: { name },
+        const category = await prisma.category.findFirst({
+            where: { name: name },
         });
         
         return category; 
