@@ -1,19 +1,18 @@
-// src/components/ui/button.tsx
+"use client"; 
+
 import React from "react";
 
-type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-type ButtonSize = "default" | "sm" | "lg" | "icon";
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
 export function Button({
   className = "",
   variant = "default",
   size = "default",
-  ...props
+  onClick, 
+  ...props 
 }: ButtonProps) {
   
   const variants = {
@@ -29,11 +28,12 @@ export function Button({
     default: "h-9 px-4 py-2",
     sm: "h-8 rounded-md px-3 text-xs",
     lg: "h-10 rounded-md px-8",
-    icon: "h-9 w-9", // Quadrado perfeito para ícones
+    icon: "h-9 w-9",
   };
 
   return (
     <button
+      onClick={onClick} 
       className={`
         inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors 
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:pointer-events-none disabled:opacity-50
@@ -41,7 +41,7 @@ export function Button({
         ${sizes[size]}
         ${className}
       `}
-      {...props}
+      {...props} 
     />
   );
 }

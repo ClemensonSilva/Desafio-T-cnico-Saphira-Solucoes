@@ -35,10 +35,20 @@ async getCartByUserId(userId: number) {
     return cart;
 }
 
- async addItemToCart(cartId: number, productId: number, quantity: number) {
+ async addItemToCart(userId : number, productId: number, quantity: number) {
     const product = await prisma.product.findUnique({
         where: { id: productId },
     });
+    // pega o carrinho do usuario
+    const cart = await prisma.cart.findUnique({
+        where: { userId: userId },
+    });
+
+    if (!product || !cart) {
+        return null;
+    }
+
+    const cartId = cart.id;
 
     const newItem = await prisma.cartItem.create({
         data: {
@@ -69,6 +79,23 @@ async getCartByUserId(userId: number) {
     });
     return deletedItem;
 }
+    async createCartForUser(userId: number) {
+
+        const userExists = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+
+    if (!userExists) {
+        throw new Error("Usuário não encontrado");
+    }
+    
+    const newCart = await prisma.cart.create({
+        data: { userId: userId },
+    });
+    
+    return newCart;
+}
+
     // Não faz sentido um e-commercer permitir uma funcionalidade como essa
  async clearCart(cartId: number) {
     const deletedItems = await prisma.cartItem.deleteMany({

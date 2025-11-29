@@ -7,8 +7,11 @@ import { ProductUI } from "@/types";
 import { CartItemUI } from "@/types";
 import { getSession, SessionData } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://desafio-t-cnico-saphira-solucoes-ae.vercel.app'
+  : 'http://localhost:3000';
 
 async function getCartItems(cartId: number) {
    const session: SessionData = await getSession();
@@ -18,9 +21,12 @@ async function getCartItems(cartId: number) {
         redirect("/login?callbackUrl=/cart"); 
         return [];
     }
-
-    const data = await fetch(`${API_URL}/api/cart/${session.user.id}`, {
-        cache: 'no-store'
+    const cookieStore = await cookies();
+    const data = await fetch(`${API_URL}/api/cart`, {
+        cache: 'no-store',
+        headers: {
+                Cookie: cookieStore.toString() 
+            }
     });
 
     if (!data.ok) {

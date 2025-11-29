@@ -5,7 +5,10 @@ import { SearchBar } from "@/components/products/search-bar";
 import { ProductUI } from "@/types";
 import Image from "next/image"; 
 
-const API_URL = 'https://desafio-t-cnico-saphira-solucoes-ae.vercel.app';
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://desafio-t-cnico-saphira-solucoes-ae.vercel.app'
+  : 'http://localhost:3000';
+  
 async function getCategories() {
   const data = await fetch(`${API_URL}/api/categories`, {
       cache: 'no-store' 

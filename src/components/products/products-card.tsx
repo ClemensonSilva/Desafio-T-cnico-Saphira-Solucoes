@@ -1,7 +1,25 @@
+"use client";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductUI } from "@/types/index";
 import Image from "next/image"; // futura otimizacao
+
+async function addToCart(productId: number) {
+  
+  const response = await fetch('/api/cart', {
+    method: 'POST',
+    headers: {
+       Cookie: cookieStore.toString() 
+    },
+    body: JSON.stringify({ productId, quantity: 1 }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao adicionar ao carrinho');
+  }
+
+  return response.json();
+}
 
 export function ProductCard({ product }: { product: ProductUI }) {
 
@@ -29,7 +47,7 @@ export function ProductCard({ product }: { product: ProductUI }) {
 
       <CardFooter className="flex justify-between">
         <span className="text-lg font-bold">{formattedPrice}</span>
-        <Button size="sm">Add to Cart</Button>
+        <Button size="sm" onClick={() => addToCart(product.id)}>Add to Cart</Button>
       </CardFooter>
     </Card>
   );

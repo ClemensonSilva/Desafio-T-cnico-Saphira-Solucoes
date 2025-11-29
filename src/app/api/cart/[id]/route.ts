@@ -1,13 +1,12 @@
 import { cartService } from "@/services/cartService";
 import { NextResponse } from "next/server";
-
 type RouteProps = {
   params: Promise<{ id: string }>
 }
 
 export async function POST(
     request: Request, 
-    props: RouteProps // Atualizado para usar o tipo com Promise
+    props: RouteProps 
 ) {
     const params = await props.params; 
     const id = Number(params.id);
@@ -85,45 +84,4 @@ export async function DELETE(
         status: 200,
         headers: { "Content-Type": "application/json" },
     });
-}
-
-export async function GET(
-    request: Request, 
-    props: RouteProps
-) {
-    try {
-        const params = await props.params;
-        const userId = Number(params.id);
-
-        if (isNaN(userId)) {
-            return NextResponse.json(
-                { error: "ID do carrinho inválido" },
-                { status: 400 }
-            );
-        }
-        
-        const cart = await cartService.getCartByUserId(userId);
-
-        if (!cart) {
-             return NextResponse.json(
-                { error: "Carrinho não encontrado para este usuário" }, 
-                { status: 404 }
-            );
-        }
-
-        const items = await cartService.getAllItemsByCart(cart.id);
-        
-        if (!items) {
-            return NextResponse.json([], { status: 200 }); 
-        }
-
-        return NextResponse.json(items, { status: 200 });
-
-    } catch (error) {
-        console.error("Erro API GET Cart:", error);
-        return NextResponse.json(
-            { error: "Erro interno do servidor" },
-            { status: 500 }
-        );
-    }
 }
