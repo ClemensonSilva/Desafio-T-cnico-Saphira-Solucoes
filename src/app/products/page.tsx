@@ -5,8 +5,7 @@ import { SearchBar } from "@/components/products/search-bar";
 import { ProductUI } from "@/types";
 import Image from "next/image"; 
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+const API_URL = 'https://desafio-t-cnico-saphira-solucoes-ae.vercel.app';
 async function getCategories() {
   const data = await fetch(`${API_URL}/api/categories`, {
       cache: 'no-store' 
