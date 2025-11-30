@@ -27,7 +27,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 pb-4">
+    <div className="flex flex-wrap gap-2 ´pb-4">
       <Button
         variant={activeCategory === 'All Categories' ? "default" : "outline"}
         onClick={() => handleSelectCategory(null)}
