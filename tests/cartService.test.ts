@@ -1,12 +1,15 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { PrismaClient } from '@prisma/client';
-import { cartService } from '../src/services/cartService'; // Ajuste o caminho conforme necessário
-
-const mockPrisma = mockDeep<PrismaClient>();
-
-jest.mock('../../src/lib/prisma', () => ({
-  prisma: mockPrisma,
+import { cartService } from '../src/services/cartService'; 
+import { prisma } from '../src/lib/prisma'; 
+    
+jest.mock('../src/lib/prisma', () => ({
+  __esModule: true,
+  prisma: mockDeep<PrismaClient>(),
 }));
+
+const mockPrisma = prisma as unknown as DeepMockProxy<PrismaClient>;
+
 
 const mockCart = { id: 1, userId: 10, items: [] };
 const mockProduct = { id: 100, name: 'Produto Teste', price: 50 };
