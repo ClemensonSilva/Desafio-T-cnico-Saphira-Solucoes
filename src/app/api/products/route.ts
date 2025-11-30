@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 
 
     if (!products || products.length === 0) {
-        return new Response(JSON.stringify({ error: 'Produtos não encontrados' }), {
+        return new Response(JSON.stringify({ error: 'Nenhum produto encontrado para esta categoria' }), {
             status: 404,
             headers: { 'Content-Type': 'application/json' },
         });
