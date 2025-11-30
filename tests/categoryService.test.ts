@@ -1,18 +1,17 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { PrismaClient } from '@prisma/client';
-import { categoryService } from '../src/services/categoryServices'; 
+import { categoryService } from '../src/services/categoryServices'; // Ajuste o caminho se necessário
+import { prisma } from '../src/lib/prisma';
+import { NotFoundError } from '@/exceptions';
 
-import { prisma } from '../src/lib/prisma'; 
-    
 jest.mock('../src/lib/prisma', () => ({
-  __esModule: true,
-  prisma: mockDeep<PrismaClient>(),
+    __esModule: true,
+    prisma: mockDeep<PrismaClient>(),
 }));
 
 const mockPrisma = prisma as unknown as DeepMockProxy<PrismaClient>;
 
-
-const mockCategory = { id: 1, name: 'Eletrônicos' };
+const mockCategory = { id: 1, name: 'Eletrônicos', image: 'url.jpg' };
 
 describe('CategoryService', () => {
     beforeEach(() => {
@@ -20,40 +19,30 @@ describe('CategoryService', () => {
     });
 
     describe('getAllCategories', () => {
-        it('deve retornar todas as categorias ordenadas por nome', async () => {
-            const mockCategoriesList = [
-                { id: 2, name: 'Casa e Banho' },
-                { id: 1, name: 'Eletrônicos' }
-            ];
-            
-            mockPrisma.category.findMany.mockResolvedValue(mockCategoriesList as any);
+        it('deve retornar a lista de categorias se houver registros', async () => {
+            const mockList = [mockCategory, { id: 2, name: 'Livros' }];
+            mockPrisma.category.findMany.mockResolvedValue(mockList as any);
 
             const result = await categoryService.getAllCategories();
 
             expect(mockPrisma.category.findMany).toHaveBeenCalledWith({
                 orderBy: { name: 'asc' }
             });
-            expect(result).toEqual(mockCategoriesList);
+            expect(result).toEqual(mockList);
         });
 
-        it('deve lançar erro genérico se o banco falhar', async () => {
-            mockPrisma.category.findMany.mockRejectedValue(new Error('Database connection failed'));
+        it('deve lançar NotFoundError se a lista estiver vazia', async () => {
+            mockPrisma.category.findMany.mockResolvedValue([]);
 
             await expect(categoryService.getAllCategories())
                 .rejects
-                .toThrow("Falha na operação de banco de dados.");
+                .toThrow(NotFoundError);
+                // ou .toThrow("Nenhuma categoria encontrada")
         });
     });
 
     describe('getCategoryById', () => {
-        it('deve retornar null se o categoryId for inválido (0, null, undefined)', async () => {
-            const result = await categoryService.getCategoryById(0);
-
-            expect(result).toBeNull();
-            expect(mockPrisma.category.findUnique).not.toHaveBeenCalled();
-        });
-
-        it('deve retornar a categoria quando o ID existe', async () => {
+        it('deve retornar a categoria se o ID existir', async () => {
             mockPrisma.category.findUnique.mockResolvedValue(mockCategory as any);
 
             const result = await categoryService.getCategoryById(1);
@@ -64,32 +53,17 @@ describe('CategoryService', () => {
             expect(result).toEqual(mockCategory);
         });
 
-        it('deve retornar null se a categoria não for encontrada no banco', async () => {
+        it('deve lançar NotFoundError se o ID não for encontrado', async () => {
             mockPrisma.category.findUnique.mockResolvedValue(null);
 
-            const result = await categoryService.getCategoryById(999);
-
-            expect(result).toBeNull();
-        });
-
-        it('deve lançar erro genérico em caso de falha no Prisma', async () => {
-            mockPrisma.category.findUnique.mockRejectedValue(new Error('Prisma error'));
-
-            await expect(categoryService.getCategoryById(1))
+            await expect(categoryService.getCategoryById(999))
                 .rejects
-                .toThrow("Falha na operação de banco de dados.");
+                .toThrow(NotFoundError);
         });
     });
 
     describe('getCategoryByName', () => {
-        it('deve retornar null se o nome não for fornecido', async () => {
-            const result = await categoryService.getCategoryByName("");
-
-            expect(result).toBeNull();
-            expect(mockPrisma.category.findFirst).not.toHaveBeenCalled();
-        });
-
-        it('deve retornar a categoria ao buscar por nome', async () => {
+        it('deve retornar a categoria se o nome existir', async () => {
             mockPrisma.category.findFirst.mockResolvedValue(mockCategory as any);
 
             const result = await categoryService.getCategoryByName('Eletrônicos');
@@ -100,12 +74,12 @@ describe('CategoryService', () => {
             expect(result).toEqual(mockCategory);
         });
 
-        it('deve lançar erro genérico em caso de falha no Prisma', async () => {
-            mockPrisma.category.findFirst.mockRejectedValue(new Error('Prisma error'));
+        it('deve lançar NotFoundError se o nome não for encontrado', async () => {
+            mockPrisma.category.findFirst.mockResolvedValue(null);
 
-            await expect(categoryService.getCategoryByName('Teste'))
+            await expect(categoryService.getCategoryByName('Inexistente'))
                 .rejects
-                .toThrow("Falha na operação de banco de dados.");
+                .toThrow(NotFoundError);
         });
     });
 });

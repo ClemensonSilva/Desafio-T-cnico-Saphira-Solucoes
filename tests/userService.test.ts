@@ -1,16 +1,23 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { PrismaClient } from '@prisma/client';
 import { userService } from '../src/services/userService'; // Ajuste o caminho
+import { prisma } from '../src/lib/prisma';
+import { NotFoundError } from '@/exceptions';
 
-import { prisma } from '../src/lib/prisma'; 
-    
 jest.mock('../src/lib/prisma', () => ({
-  __esModule: true,
-  prisma: mockDeep<PrismaClient>(),
+    __esModule: true,
+    prisma: mockDeep<PrismaClient>(),
 }));
 
 const mockPrisma = prisma as unknown as DeepMockProxy<PrismaClient>;
 
+const mockCartWithItems = { 
+    id: 1, 
+    userId: 10, 
+    items: [], 
+    createdAt: new Date(), 
+    updatedAt: new Date() 
+};
 
 describe('UserService', () => {
     beforeEach(() => {
@@ -18,31 +25,24 @@ describe('UserService', () => {
     });
 
     describe('getCarByUser', () => {
-        const userId = 1;
-        const mockCarts = [
-            { id: 2, userId: 1, createdAt: new Date('2023-10-02') }, 
-            { id: 1, userId: 1, createdAt: new Date('2023-10-01') }, 
-        ];
+        it('deve retornar o carrinho único do usuário incluindo os itens', async () => {
+            mockPrisma.cart.findUnique.mockResolvedValue(mockCartWithItems as any);
 
-        
+            const result = await userService.getCarByUser(10);
 
-        it('deve retornar um array vazio se o usuário não tiver carrinhos', async () => {
-            mockPrisma.cart.findMany.mockResolvedValue([]);
-
-            const result = await userService.getCarByUser(userId);
-
-            expect(mockPrisma.cart.findMany).toHaveBeenCalledWith({
-                where: { userId: userId },
-                orderBy: { createdAt: 'desc' }
-            });
-            expect(result).toEqual([]);
+            expect(mockPrisma.cart.findUnique).toHaveBeenCalledWith({
+                where: { userId: 10 },
+                        include: { items: true }, 
+                    });
+            expect(result).toEqual(mockCartWithItems);
         });
-        
-        it('deve propagar o erro se a consulta ao banco falhar', async () => {
-            const prismaError = new Error("Database connection error");
-            mockPrisma.cart.findMany.mockRejectedValue(prismaError);
 
-            await expect(userService.getCarByUser(userId)).rejects.toThrow(prismaError);
+        it('deve lançar NotFoundError se o carrinho não for encontrado', async () => {
+            mockPrisma.cart.findUnique.mockResolvedValue(null);
+
+            await expect(userService.getCarByUser(10))
+                .rejects
+                .toThrow("Nenhum carrinho encontrado para o usuário fornecido");
         });
     });
 });
