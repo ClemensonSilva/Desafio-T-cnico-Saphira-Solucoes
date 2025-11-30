@@ -1,47 +1,39 @@
+import { NotFoundError } from "@/exceptions";
 import {prisma } from "../lib/prisma";
 
 class CategoryService {
     async getAllCategories() {
-        try {
             const categories = await prisma.category.findMany({
                 orderBy: { name: 'asc' }
             });
+
+            if(categories.length === 0) { throw new NotFoundError("Nenhuma categoria encontrada"); }
+
             return categories;
-        } catch (error) {
-            console.error("Erro ao buscar todas as categorias:", error);
-            throw new Error("Falha na operação de banco de dados.");
-        }
     }
 
     async getCategoryById(categoryId: number) { 
-        if (!categoryId) return null;
 
-        try {
             const category = await prisma.category.findUnique({
                 where: { id: categoryId },
             });
+
+            if(!category) { throw new NotFoundError("Categoria não encontrada"); }
             return category;
-        } catch (error) {
-            console.error("Erro ao buscar categoria por ID:", error);
-            throw new Error("Falha na operação de banco de dados.");
-        }
     }
 
     async getCategoryByName(name: string) {
-        if (!name) return null;
         
-        try {
         const category = await prisma.category.findFirst({
             where: { name: name },
         });
         
+        if(!category) { throw new NotFoundError("Categoria não encontrada"); }
+
         return category; 
 
-        } catch (error) {
-             console.error("Erro ao buscar categoria por nome:", error);
-            throw new Error("Falha na operação de banco de dados."); 
         
-    }
+    
 }
 }
 export const categoryService = new CategoryService();
