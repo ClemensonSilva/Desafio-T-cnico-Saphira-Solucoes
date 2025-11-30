@@ -43,6 +43,7 @@ export async function GET(
 
     if (!cart) {
         const cart = await cartService.createCartForUser(session.user.id);
+        return NextResponse.json(cart.items);
     }
 
     return NextResponse.json(cart.items);

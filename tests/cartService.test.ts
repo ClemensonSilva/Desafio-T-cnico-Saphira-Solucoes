@@ -1,6 +1,7 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { PrismaClient } from '@prisma/client';
-import { cartService } from '../src/services/cartService'; 
+import { cartService } from '../src/services/cartService';
+
 import { prisma } from '../src/lib/prisma'; 
     
 jest.mock('../src/lib/prisma', () => ({
@@ -10,7 +11,6 @@ jest.mock('../src/lib/prisma', () => ({
 
 const mockPrisma = prisma as unknown as DeepMockProxy<PrismaClient>;
 
-
 const mockCart = { id: 1, userId: 10, items: [] };
 const mockProduct = { id: 100, name: 'Produto Teste', price: 50 };
 const mockCartItem = { id: 500, cartId: 1, productId: 100, quantity: 1 };
@@ -18,6 +18,7 @@ const mockCartItem = { id: 500, cartId: 1, productId: 100, quantity: 1 };
 describe('CartService', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.restoreAllMocks();
     });
 
     describe('getCartByUserId', () => {
@@ -118,7 +119,7 @@ describe('CartService', () => {
             await cartService.editItemQuantity(1, 100, 0);
 
             expect(mockPrisma.cartItem.deleteMany).toHaveBeenCalledWith({
-                where: { cartId: 1, productId: 100 }
+                where: { cartId: 1, productId: 100}
             });
             expect(mockPrisma.cartItem.updateMany).not.toHaveBeenCalled();
         });
@@ -132,7 +133,7 @@ describe('CartService', () => {
                 where: { cartId: 1, productId: 100 },
                 data: { quantity: 5 }
             });
-        });
+        }); 
     });
 
     describe('createCartForUser', () => {
@@ -151,7 +152,8 @@ describe('CartService', () => {
             const result = await cartService.createCartForUser(10);
 
             expect(mockPrisma.cart.create).toHaveBeenCalledWith({
-                data: { userId: 10 }
+                data: { userId: 10 },
+                include: { items: true }
             });
             expect(result).toEqual(mockCart);
         });

@@ -14,14 +14,21 @@ async function getCategories() {
       cache: 'no-store' 
   });
   
-  
   return data.json();
 }
 
-async function getProducts(categoryName?: string) {
-  const url = categoryName 
-    ? `${API_URL}/api/products?category=${encodeURIComponent(categoryName)}`
-    : `${API_URL}/api/products`;
+async function getProducts(categoryName?: string, searchQuery?: string) {
+  const params = new URLSearchParams();
+
+  if (categoryName) {
+    params.set("category", categoryName);
+  }
+
+  if (searchQuery) {
+    params.set("search", searchQuery); // Adiciona ?search=termo na URL da API
+  }
+
+  const url = `${API_URL}/api/products?${params.toString()}`;
   
   const data = await fetch(url, {
     cache: 'no-store' 
@@ -39,13 +46,14 @@ type ProductsPageProps = {
 
 export default async function Products(props: ProductsPageProps) { 
       const searchParams = await props.searchParams;
+      
+      const category = searchParams.category as string | undefined;
+      const search = searchParams.search as string | undefined;
+
       const [products, categories] = await Promise.all([
-        getProducts(searchParams.category as string | undefined),
+        getProducts(category, search),
         getCategories()
       ]);
-
-
-      
   
   return (
     <div className="min-h-screen bg-gray-50">
