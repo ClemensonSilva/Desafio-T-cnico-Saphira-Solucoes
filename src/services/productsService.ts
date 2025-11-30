@@ -1,6 +1,7 @@
 import { NotFoundError } from "@/exceptions";
 import { prisma } from "../lib/prisma";
 import { categoryService } from "./categoryServices";
+import { Category } from "@prisma/client";
 
 class ProductsService {
     async getProductById(productId: number) {
@@ -24,13 +25,23 @@ class ProductsService {
     }
 
     async deleteProductById(productId: number) {
+        const product = await prisma.product.findUnique({
+            where: { id: productId },
+        });
+        if (!product) {
+            throw new NotFoundError('Produto não encontrado ou erro ao deletar');
+        }
+
         const deletedProduct = await prisma.product.delete({
             where: { id: productId },
         });
+        
         return deletedProduct;
     }
 
-    async getProductsByCategory(categoryId: number) {
+    async getProductsByCategory(category: Category ) {
+
+        const categoryId = category.id;
         const products = await prisma.product.findMany({
             where: { categoryId: categoryId },
             orderBy: { price: 'asc' },
@@ -50,6 +61,10 @@ class ProductsService {
             orderBy: { price: 'asc' },
             include: { category: true },
         });
+        if (products.length === 0) {
+            throw new NotFoundError('Nenhum produto encontrado com o nome fornecido');
+        }
+
         return products;
     }
 async getProductsByFilter(categoryName?: string, searchQuery?: string) {

@@ -1,4 +1,5 @@
-import { prisma } from '../lib/prisma'; 
+import { NotFoundError } from '@/exceptions';
+import { prisma } from '../lib/prisma';
 
 class CartService {
 
@@ -47,7 +48,7 @@ class CartService {
         });
 
         if (!product || !cart) {
-            return null;
+            throw new NotFoundError("Produto ou carrinho não encontrado");
         }
         // se o item já existe, atualiza a quantidade
         const existingItem = await prisma.cartItem.findFirst({
@@ -76,19 +77,25 @@ class CartService {
     }
 
     async editItemQuantity(cartId: number, productId: number, quantity: number) {
+        let result;
+
         if (quantity === 0) {
-            return await prisma.cartItem.deleteMany({
-                where: { cartId:cartId, productId: productId }
+            result = await prisma.cartItem.deleteMany({
+                where: { cartId: cartId, productId: productId }
+            });
+        } else {
+            result = await prisma.cartItem.updateMany({
+                where: { cartId: cartId, productId: productId },
+                data: { quantity: quantity },
             });
         }
 
-        const updatedItem = await prisma.cartItem.updateMany({
-            where: { cartId: cartId, productId: productId },
-            data: { quantity: quantity },
-        });
-        return updatedItem;
+        if (result.count === 0) {
+            throw new NotFoundError("Item do carrinho não encontrado");
+        }
+
+        return result;
     }
-    
     async removeItemFromCart(cartId: number) {
         const deletedItem = await prisma.cartItem.deleteMany({
             where: { cartId: cartId },
@@ -102,7 +109,7 @@ class CartService {
         });
 
         if (!userExists) {
-            throw new Error("Usuário não encontrado");
+            throw new NotFoundError("Usuário não encontrado");
         }
 
         const newCart = await prisma.cart.create({
